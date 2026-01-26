@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Skyline Studios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Stars -->
+<div id="stars"></div>
+
+<!-- Navbar -->
+<header class="nav glass">
+  <div class="nav-left">
+    <img src="logo.png" class="nav-logo" alt="Skyline Studios Logo">
+    <span class="nav-title">Skyline Studios</span>
+  </div>
+
+  <nav class="nav-links">
+    <a href="#games">Games</a>
+    <a href="#about">About</a>
+    <a href="https://discord.gg/YOUR_INVITE_CODE" target="_blank" class="icon-link">
+      <img src="DiscordIcon.png" alt="Discord" class="nav-icon">
+    </a>
+    <a href="https://www.roblox.com/groups/9530841" target="_blank" class="icon-link">
+      <img src="RobloxIcon.png" alt="Roblox" class="nav-icon">
+    </a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>
+    Dream, Build, Play
+  </h1>
+
+  <button class="primary-btn" onclick="document.querySelector('#games').scrollIntoView({behavior: 'smooth'})">
+    <h3>Explore Now →</h3>
+  </button>
+</section>
+
+<!-- Games -->
+<section class="games" id="games">
+  <h2 style="font-size: 3rem; font-weight: 800; letter-spacing: 1.5px;">
+    OUR GAMES
+  </h2>
+
+  <p>Explore our collection of immersive Roblox experiences</p>
+  <p style="font-size: 0.8rem; opacity: 0.6;">
+    *Some games shown were contributed to by Skyline Studios and are not studio-owned.
+  </p>
+
+  <div class="game-stats">
+    <div class="pill">
+      <img src="UserIcon.png" alt="Users" class="pill-icon">
+      <span id="total-playing">0</span> <span>playing now</span>
+    </div>
+    <div class="pill">
+      <img src="VisitIcon.png" alt="Visits" class="pill-icon">
+      <span id="total-visits">0</span> <span>total visits</span>
+    </div>
+  </div>
+
+  <div class="carousel">
+    <button class="arrow left">‹</button>
+
+    <div class="cards">
+      <div class="game-card glass" data-universe-id="9364066205">
+        <div class="game-thumb-wrapper">
+          <img class="game-thumb" src="" alt="Game Thumbnail">
+          <div class="thumb-overlay">
+            <div class="thumb-stat">
+              <img src="UserIcon.png" alt="Players" class="stat-icon">
+              <span class="ccu">0</span>
+            </div>
+            <div class="thumb-stat">
+              <img src="VisitIcon.png" alt="Visits" class="stat-icon">
+              <span class="visits">0</span>
+            </div>
+          </div>
+        </div>
+        <h3 class="game-name">Loading...</h3>
+        <div class="game-author"><span class="author-name">Loading...</span> <img src="VerifiedIcon.png" class="verified-badge" alt="Verified"></div>
+        <p class="game-desc">Fetching data...</p>
+        <button class="play-btn">Play Now →</button>
+      </div>
+
+      <div class="game-card glass" data-universe-id="7314795657">
+        <div class="game-thumb-wrapper">
+          <img class="game-thumb" src="" alt="Game Thumbnail">
+          <div class="thumb-overlay">
+            <div class="thumb-stat">
+              <img src="UserIcon.png" alt="Players" class="stat-icon">
+              <span class="ccu">0</span>
+            </div>
+            <div class="thumb-stat">
+              <img src="VisitIcon.png" alt="Visits" class="stat-icon">
+              <span class="visits">0</span>
+            </div>
+          </div>
+        </div>
+        <h3 class="game-name">Loading...</h3>
+        <div class="game-author"><span class="author-name">Loading...</span> <img src="VerifiedIcon.png" class="verified-badge" alt="Verified"></div>
+        <p class="game-desc">Fetching data...</p>
+        <button class="play-btn">Play Now →</button>
+      </div>
+
+      <div class="game-card glass" data-universe-id="8539045222">
+        <div class="game-thumb-wrapper">
+          <img class="game-thumb" src="" alt="Game Thumbnail">
+          <div class="thumb-overlay">
+            <div class="thumb-stat">
+              <img src="UserIcon.png" alt="Players" class="stat-icon">
+              <span class="ccu">0</span>
+            </div>
+            <div class="thumb-stat">
+              <img src="VisitIcon.png" alt="Visits" class="stat-icon">
+              <span class="visits">0</span>
+            </div>
+          </div>
+        </div>
+        <h3 class="game-name">Loading...</h3>
+        <div class="game-author"><span class="author-name">Loading...</span> <img src="VerifiedIcon.png" class="verified-badge" alt="Verified"></div>
+        <p class="game-desc">Fetching data...</p>
+        <button class="play-btn">Play Now →</button>
+      </div>
+    </div>
+
+    <button class="arrow right">›</button>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="about" id="about">
+  <div class="about-container">
+    <div class="about-header">
+      <h2>About Skyline Studios</h2>
+      <p class="about-subtitle">Building the future of Roblox experiences</p>
+    </div>
+
+    <div class="about-grid">
+      <!-- Mission -->
+      <div class="about-card glass">
+        <div class="about-icon">🎯</div>
+        <h3>Our Mission</h3>
+        <p>We're dedicated to creating immersive and engaging Roblox experiences that bring joy to millions of players worldwide. Our mission is to push the boundaries of what's possible on the platform.</p>
+      </div>
+
+      <!-- Team -->
+      <div class="about-card glass">
+        <div class="about-icon">👥</div>
+        <h3>Our Team</h3>
+        <p>Skyline Studios is powered by a passionate team of developers, designers, and creators who are committed to excellence in game development and community engagement.</p>
+      </div>
+
+      <!-- Quality -->
+      <div class="about-card glass">
+        <div class="about-icon">⭐</div>
+        <h3>Quality First</h3>
+        <p>Every project we undertake is crafted with meticulous attention to detail, ensuring that our games meet the highest standards of quality and player satisfaction.</p>
+      </div>
+
+      <!-- Community -->
+      <div class="about-card glass">
+        <div class="about-icon">💬</div>
+        <h3>Community Driven</h3>
+        <p>We believe in listening to our community. Player feedback shapes our development process, helping us create experiences that truly resonate with our audience.</p>
+      </div>
+
+      <!-- Innovation -->
+      <div class="about-card glass">
+        <div class="about-icon">🚀</div>
+        <h3>Innovation</h3>
+        <p>We constantly explore new technologies and game mechanics to deliver fresh, exciting experiences that keep players coming back for more.</p>
+      </div>
+
+      <!-- Values -->
+      <div class="about-card glass">
+        <div class="about-icon">💎</div>
+        <h3>Our Values</h3>
+        <p>Integrity, creativity, and player satisfaction are at the core of everything we do. We're committed to building a positive and inclusive gaming environment.</p>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="about-stats">
+      <div class="stat-item">
+        <div class="stat-number">30M+</div>
+        <div class="stat-label">Total Visits</div>
+        <p style="font-size: 0.8rem; opacity: 0.6;">
+        *may not be accurate
+       </p>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">5+</div>
+        <div class="stat-label">Games Published</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">700</div>
+        <div class="stat-label">Active Players</div>
+        <p style="font-size: 0.8rem; opacity: 0.6;">
+        *avarage total ccu
+       </p>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">2021</div>
+        <div class="stat-label">Established</div>
+        <p style="font-size: 0.8rem; opacity: 0.6;">
+        *originally build4fun
+       </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-column footer-brand">
+      <div class="footer-logo-section">
+        <img src="logo.png" class="footer-logo" alt="Skyline Studios Logo">
+        <div>
+          <h3 class="footer-title">Skyline Studios</h3>
+          <p class="footer-subtitle">DREAM, BUILD, PLAY</p>
+        </div>
+      </div>
+      <p class="footer-tagline">Creating immersive Roblox experiences built for you.</p>
+    </div>
+
+    <div class="footer-column">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#games">Games</a></li>
+        <li><a href="https://www.roblox.com/groups/9530841" target="_blank">Roblox Group</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4>Contact</h4>
+      <ul>
+        <li>
+          <a href="https://discord.gg/YOUR_INVITE_CODE" target="_blank">
+            <img src="DiscordIcon.png" alt="Discord" class="footer-icon">
+            Contact via discord.
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4>Get in Touch</h4>
+      <a href="https://discord.gg/YOUR_INVITE_CODE" target="_blank" class="footer-contact-btn">
+        <img src="DiscordIcon.png" alt="Contact" class="btn-icon">
+        Join Our Server (soon)
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Skyline Studios. All rights reserved.</p>
+    <a href="https://discord.gg/YOUR_INVITE_CODE" target="_blank" class="footer-social">
+      <img src="DiscordIcon.png" alt="Discord" class="social-icon">
+    </a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
