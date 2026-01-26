@@ -7,6 +7,41 @@ for (let i = 0; i < 70; i++) {
   starsContainer.appendChild(s);
 }
 
+// Mobile menu toggle functionality
+const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+if (mobileMenuBtn) {
+  mobileMenuBtn.addEventListener('click', function() {
+    // Placeholder for mobile menu functionality
+    // You can add a mobile menu drawer/overlay here
+    alert('Mobile menu - Add your mobile navigation drawer here');
+  });
+}
+
+// Smooth scroll for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetId = this.getAttribute('href');
+    
+    // Skip if it's just "#" (home link)
+    if (targetId === '#') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      return;
+    }
+    
+    const targetElement = document.querySelector(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+
 // Roblox API (Cloudflare Worker)
 const API = "https://skyline-roblox-api.bschofield987.workers.dev";
 
@@ -151,24 +186,130 @@ async function loadGames() {
   }
 }
 
-// Carousel (now disabled for grid layout, but keeping for compatibility)
+// Carousel functionality
 const cardsEl = document.querySelector(".cards");
-const leftArrow = document.querySelector(".arrow.left");
-const rightArrow = document.querySelector(".arrow.right");
-let index = 0;
+const gameCards = document.querySelectorAll(".game-card");
 
-function updateCarousel() {
-  // Disabled for grid layout
-  if (leftArrow) {
-    leftArrow.style.display = 'none';
+let currentIndex = 1; // Start with second card (index 1) in center
+let isDragging = false;
+let startX = 0;
+let currentTranslate = 0;
+let prevTranslate = 0;
+
+// Initialize - set middle card as active
+function initCarousel() {
+  // Start with second card if there are at least 2 cards
+  if (gameCards.length > 1) {
+    currentIndex = 1;
+  } else {
+    currentIndex = 0;
   }
-  if (rightArrow) {
-    rightArrow.style.display = 'none';
-  }
+  updateCarousel();
+  updateActiveCard();
 }
 
-// Initial carousel state
-updateCarousel();
+function updateCarousel() {
+  const cardWidth = 380 + 32; // card width + gap
+  const carousel = cardsEl.parentElement;
+  const containerWidth = carousel.offsetWidth;
+  
+  // Calculate offset to center the active card
+  const centerOffset = containerWidth / 2 - cardWidth / 2;
+  const translateX = centerOffset - (currentIndex * cardWidth);
+  
+  currentTranslate = translateX;
+  prevTranslate = translateX;
+  cardsEl.style.transform = `translateX(${translateX}px)`;
+}
+
+function updateActiveCard() {
+  gameCards.forEach((card, index) => {
+    if (index === currentIndex) {
+      card.classList.add('active');
+    } else {
+      card.classList.remove('active');
+    }
+  });
+}
+
+// Touch/Mouse drag functionality
+function getPositionX(event) {
+  return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+}
+
+function dragStart(event) {
+  // Don't start drag if clicking on an image
+  if (event.target.tagName === 'IMG') {
+    return;
+  }
+  
+  isDragging = true;
+  startX = getPositionX(event);
+  cardsEl.style.cursor = 'grabbing';
+  cardsEl.style.transition = 'none';
+}
+
+function drag(event) {
+  if (!isDragging) return;
+  
+  event.preventDefault(); // Prevent image dragging
+  
+  const currentX = getPositionX(event);
+  const diff = currentX - startX;
+  currentTranslate = prevTranslate + diff;
+  
+  cardsEl.style.transform = `translateX(${currentTranslate}px)`;
+}
+
+function dragEnd() {
+  if (!isDragging) return;
+  
+  isDragging = false;
+  cardsEl.style.cursor = 'grab';
+  cardsEl.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+  
+  const movedBy = currentTranslate - prevTranslate;
+  const cardWidth = 380 + 32;
+  
+  // Determine if we should move to next/prev card
+  if (movedBy < -100 && currentIndex < gameCards.length - 1) {
+    currentIndex++;
+  } else if (movedBy > 100 && currentIndex > 0) {
+    currentIndex--;
+  }
+  
+  updateCarousel();
+  updateActiveCard();
+}
+
+// Add event listeners for dragging
+if (cardsEl) {
+  // Mouse events
+  cardsEl.addEventListener('mousedown', dragStart);
+  cardsEl.addEventListener('mousemove', drag);
+  cardsEl.addEventListener('mouseup', dragEnd);
+  cardsEl.addEventListener('mouseleave', dragEnd);
+  
+  // Touch events
+  cardsEl.addEventListener('touchstart', dragStart);
+  cardsEl.addEventListener('touchmove', drag);
+  cardsEl.addEventListener('touchend', dragEnd);
+  
+  // Prevent context menu on long press
+  cardsEl.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+// Update on window resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    updateCarousel();
+  }, 250);
+});
+
+// Initialize carousel
+initCarousel();
 
 // Load games on page load ONLY
 loadGames();
