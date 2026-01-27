@@ -42,8 +42,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// Roblox API (Cloudflare Worker)
-const API = "https://skyline-roblox-api.bschofield987.workers.dev";
+// REMOVED: Cloudflare Worker - Now fetching directly from Roblox APIs
 
 let totalPlaying = 0;
 let totalVisits = 0;
@@ -77,6 +76,70 @@ function truncateText(text, maxLength) {
   return text.substring(0, maxLength) + '...';
 }
 
+// NEW: Fetch game data directly from Roblox APIs (replaces worker functionality)
+async function fetchGameData(universeId) {
+  try {
+    // Fetch game data and thumbnail in parallel (same as worker did)
+    const [gameRes, thumbRes] = await Promise.all([
+      fetch(`https://games.roblox.com/v1/games?universeIds=${universeId}`),
+      fetch(`https://thumbnails.roblox.com/v1/games/icons?universeIds=${universeId}&size=512x512&format=Png&isCircular=false`)
+    ]);
+
+    // Parse responses
+    const gameData = await gameRes.json();
+    const thumbData = await thumbRes.json();
+
+    // Validate data exists
+    if (!gameData.data || gameData.data.length === 0) {
+      throw new Error("Game not found");
+    }
+
+    const game = gameData.data[0];
+    const thumb = thumbData.data && thumbData.data[0] ? thumbData.data[0] : null;
+
+    // Fetch creator information and verification status
+    let creatorName = "Unknown Creator";
+    let isVerified = false;
+    
+    if (game.creator) {
+      try {
+        if (game.creator.type === "Group") {
+          // Fetch group name and verification
+          const groupRes = await fetch(`https://groups.roblox.com/v1/groups/${game.creator.id}`);
+          const groupData = await groupRes.json();
+          creatorName = groupData.name || "Unknown Group";
+          isVerified = groupData.hasVerifiedBadge || false;
+        } else if (game.creator.type === "User") {
+          // Fetch user name and verification
+          const userRes = await fetch(`https://users.roblox.com/v1/users/${game.creator.id}`);
+          const userData = await userRes.json();
+          creatorName = userData.name || userData.displayName || "Unknown User";
+          isVerified = userData.hasVerifiedBadge || false;
+        }
+      } catch (creatorError) {
+        console.error("Error fetching creator:", creatorError);
+        // Keep default values if fetch fails
+      }
+    }
+
+    // Return data in the same format as the worker did
+    return {
+      name: game.name || "Untitled Game",
+      description: game.description || "",
+      visits: game.visits || 0,
+      playing: game.playing || 0,
+      thumbnail: thumb ? thumb.imageUrl : "",
+      placeId: game.rootPlaceId || null,
+      creator: creatorName,
+      isVerified: isVerified
+    };
+
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+}
+
 async function loadGames() {
   totalPlaying = 0;
   totalVisits = 0;
@@ -87,8 +150,8 @@ async function loadGames() {
     const id = card.dataset.universeId;
     
     try {
-      const res = await fetch(`${API}?universeId=${id}`);
-      const data = await res.json();
+      // NEW: Use direct fetch instead of worker
+      const data = await fetchGameData(id);
 
       console.log(`Game ${id} FULL data:`, data); // Debug log
 
