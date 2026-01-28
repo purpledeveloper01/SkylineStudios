@@ -177,6 +177,29 @@ body {
   font-weight: 500;
   letter-spacing: 1.5px;
   text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 2s steps(17, end) 0.5s forwards, blink 0.75s step-end infinite;
+  border-right: 2px solid rgba(178, 217, 255, 0.8);
+  width: 0;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: rgba(178, 217, 255, 0.8);
+  }
 }
 
 /* Desktop Navigation Links */
@@ -510,7 +533,7 @@ body {
 /* Carousel */
 .carousel {
   position: relative;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 20px;
   overflow: hidden;
@@ -714,7 +737,7 @@ body {
 
 @media (max-width: 1200px) {
   .cards {
-    justify-content: center;
+    justify-content: flex-start;
     gap: 24px;
   }
   
