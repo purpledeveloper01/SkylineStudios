@@ -1,3 +1,20 @@
+/* =========================
+   MAINTENANCE MODE CHECK
+   ========================= */
+
+fetch(
+  "https://raw.githubusercontent.com/purpledeveloper01/SkylineStudios/main/maintenance.json?ts=" + Date.now()
+)
+  .then(res => res.json())
+  .then(data => {
+    if (data.maintenance === true) {
+      document.getElementById("maintenance-overlay").hidden = false;
+      document.body.style.overflow = "hidden";
+      throw new Error("Maintenance mode active"); // stop rest of JS
+    }
+  })
+  .catch(() => {});
+
 // Stars - append to #stars container instead of body
 const starsContainer = document.getElementById("stars");
 for (let i = 0; i < 70; i++) {
