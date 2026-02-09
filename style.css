@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Russo One', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -640,6 +640,11 @@ body {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.8);
 }
 
+.game-card:hover .thumb-stat span {
+  color: #b6dcff;
+}
+
+
 /* Stat Icons in Game Cards */
 .stat-icon {
   width: 16px;
@@ -647,13 +652,10 @@ body {
   display: block;
 }
 
-.game-card .thumb-stat span {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 0.9rem;
-  line-height: 1;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+.game-card .thumb-stat span.ccu {
+  color: #8fc7ff;
 }
+
 
 .game-card h3 {
   margin: 0;
@@ -1112,6 +1114,143 @@ body {
   .footer-bottom {
     flex-direction: column;
     gap: 20px;
+    text-align: center;
+  }
+}
+
+/* ============================================
+   COLLABORATION / ACQUISITIONS SECTION
+   ============================================ */
+
+.collab {
+  padding: 120px 20px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.collab-title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin-bottom: 80px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Cards Layout */
+.collab-cards {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Card Base */
+.collab-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 48px;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  border: 2px solid;
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+}
+
+/* Grid Overlay */
+.collab-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Content */
+.collab-content {
+  position: relative;
+  max-width: 620px;
+  text-align: left;
+}
+
+.collab-content h3 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.collab-content h3 span {
+  font-weight: 900;
+}
+
+.collab-content p {
+  font-size: 1.05rem;
+  opacity: 0.75;
+  line-height: 1.6;
+}
+
+/* Contact Button */
+.collab-btn {
+  position: relative;
+  padding: 14px 36px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.collab-btn:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-2px);
+}
+
+/* Color Variants */
+.collab-card.blue {
+  border-color: #4c9aff;
+  box-shadow: 0 0 60px rgba(76,154,255,0.35);
+}
+
+.collab-card.blue span {
+  color: #4c9aff;
+}
+
+.collab-card.green {
+  border-color: #3dff6f;
+  box-shadow: 0 0 60px rgba(61,255,111,0.35);
+}
+
+.collab-card.green span {
+  color: #3dff6f;
+}
+
+.collab-card.yellow {
+  border-color: #ffd84c;
+  box-shadow: 0 0 60px rgba(255,216,76,0.35);
+}
+
+.collab-card.yellow span {
+  color: #ffd84c;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .collab-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .collab-content {
     text-align: center;
   }
 }
