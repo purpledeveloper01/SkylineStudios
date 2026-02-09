@@ -120,13 +120,20 @@
 
 <!-- Hero -->
 <section class="hero">
-  <h1>
-    Dream, Build, Play
-  </h1>
+  <h1>Dream, Build, Play</h1>
 
-  <button class="primary-btn" onclick="document.querySelector('#games').scrollIntoView({behavior: 'smooth'})">
+  <button
+    class="primary-btn"
+    onclick="document.querySelector('#games').scrollIntoView({ behavior: 'smooth' })"
+  >
     <h3>Explore Now →</h3>
   </button>
+
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator" onclick="document.querySelector('#games').scrollIntoView({ behavior: 'smooth' })">
+    <span class="scroll-indicator-text">Scroll</span>
+    <div class="scroll-indicator-arrow"></div>
+  </div>
 </section>
 
 <!-- Games -->
