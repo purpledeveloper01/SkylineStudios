@@ -314,5 +314,55 @@ initCarousel();
 // Load games on page load ONLY
 loadGames();
 
-// REMOVED: Auto-refresh interval to prevent rate limiting
-// The page will only load data when refreshed by the user
+// Rain effect
+(function() {
+  const btn = document.getElementById('rain-btn');
+  const container = document.getElementById('rain-container');
+  if (!btn || !container) return;
+
+  let raining = false;
+  let onCooldown = false;
+  const RAIN_DURATION = 2000;
+  const COOLDOWN = 3000;
+  const DROP_COUNT = 60;
+  const DROP_IMAGE = 'happymeal.png';
+
+  function spawnDrop() {
+    const drop = document.createElement('div');
+    drop.className = 'rain-drop';
+    const x = Math.random() * 100;
+    const dur = 0.6 + Math.random() * 1.2;
+    const delay = Math.random() * 1.8;
+    drop.style.left = x + 'vw';
+    drop.style.animationDuration = dur + 's';
+    drop.style.animationDelay = delay + 's';
+    drop.style.opacity = 0.7 + Math.random() * 0.3;
+    const img = document.createElement('img');
+    img.src = DROP_IMAGE;
+    img.draggable = false;
+    drop.appendChild(img);
+    container.appendChild(drop);
+    drop.addEventListener('animationend', () => drop.remove());
+  }
+
+  btn.addEventListener('click', () => {
+    if (raining || onCooldown) return;
+    raining = true;
+    btn.classList.add('active');
+
+    for (let i = 0; i < DROP_COUNT; i++) spawnDrop();
+
+    setTimeout(() => {
+      raining = false;
+      onCooldown = true;
+      btn.classList.remove('active');
+      btn.classList.add('cooldown');
+      setTimeout(() => {
+        onCooldown = false;
+        btn.classList.remove('cooldown');
+      }, COOLDOWN);
+    }, RAIN_DURATION);
+  });
+})();
+
+// ADDED CUSTOM EASTTER EGG RAIN OKAY STOP LOOKING AT MY CODE!
