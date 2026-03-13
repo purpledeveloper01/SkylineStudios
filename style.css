@@ -1129,8 +1129,8 @@ body {
 .rain-drop {
   position: absolute;
   top: -30px;
-  width: 28px;
-  height: 28px;
+  width: 48px;
+  height: 48px;
   animation: fall linear forwards;
   pointer-events: none;
   user-select: none;
@@ -1160,3 +1160,4 @@ body::before {
   pointer-events: none;
   z-index: 0;
 }
+
