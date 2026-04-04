@@ -1,344 +1,340 @@
-// Stars - append to #stars container instead of body
-const starsContainer = document.getElementById("stars");
-for (let i = 0; i < 70; i++) {
-  const s = document.createElement("span");
-  s.style.left = Math.random() * 100 + "vw";
-  s.style.animationDuration = Math.random() * 30 + 20 + "s";
-  starsContainer.appendChild(s);
+/* ===========================
+   CANVAS STARFIELD + AURORA BG
+   =========================== */
+(function () {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [], animId;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function mkStar() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.2,
+      a: Math.random(),
+      da: (Math.random() * 0.003 + 0.001) * (Math.random() < 0.5 ? 1 : -1),
+      vx: (Math.random() - 0.5) * 0.04,
+      vy: -Math.random() * 0.06 - 0.02,
+    };
+  }
+
+  function init() {
+    resize();
+    stars = Array.from({ length: 160 }, mkStar);
+  }
+
+  // Subtle aurora blobs
+  let t = 0;
+  function drawAurora() {
+    ctx.save();
+    ctx.globalAlpha = 0.07;
+
+    // Blue blob
+    const gx1 = W * 0.2 + Math.sin(t * 0.4) * W * 0.08;
+    const gy1 = H * 0.25 + Math.cos(t * 0.3) * H * 0.05;
+    const g1 = ctx.createRadialGradient(gx1, gy1, 0, gx1, gy1, W * 0.35);
+    g1.addColorStop(0, '#4c9aff');
+    g1.addColorStop(1, 'transparent');
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, W, H);
+
+    // Violet blob
+    const gx2 = W * 0.75 + Math.cos(t * 0.35) * W * 0.09;
+    const gy2 = H * 0.6 + Math.sin(t * 0.28) * H * 0.06;
+    const g2 = ctx.createRadialGradient(gx2, gy2, 0, gx2, gy2, W * 0.3);
+    g2.addColorStop(0, '#8b5cf6');
+    g2.addColorStop(1, 'transparent');
+    ctx.fillStyle = g2;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.restore();
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Dark bg
+    ctx.fillStyle = '#06060a';
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.028)';
+    ctx.lineWidth = 1;
+    const gsize = 56;
+    for (let x = 0; x < W; x += gsize) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += gsize) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    drawAurora();
+
+    // Stars
+    stars.forEach(s => {
+      s.x += s.vx;
+      s.y += s.vy;
+      s.a += s.da;
+      if (s.a < 0 || s.a > 1) s.da *= -1;
+      if (s.y < -2) s.y = H + 2;
+      if (s.x < -2) s.x = W + 2;
+      if (s.x > W + 2) s.x = -2;
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.a * 0.7})`;
+      ctx.fill();
+    });
+
+    t += 0.01;
+    animId = requestAnimationFrame(frame);
+  }
+
+  init();
+  frame();
+  window.addEventListener('resize', () => { resize(); });
+})();
+
+/* ===========================
+   NAVBAR SCROLL
+   =========================== */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+}, { passive: true });
+
+/* ===========================
+   MOBILE MENU
+   =========================== */
+const mobileBtn = document.getElementById('mobileMenuBtn');
+const mobileDrawer = document.getElementById('mobileDrawer');
+
+function closeMobileMenu() {
+  mobileBtn.classList.remove('open');
+  mobileDrawer.classList.remove('open');
 }
 
-// Mobile menu toggle functionality
-const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-if (mobileMenuBtn) {
-  mobileMenuBtn.addEventListener('click', function() {
-    // Placeholder for mobile menu functionality
-    // You can add a mobile menu drawer/overlay here
-    alert('Mobile menu - Add your mobile navigation drawer here');
+if (mobileBtn && mobileDrawer) {
+  mobileBtn.addEventListener('click', () => {
+    mobileBtn.classList.toggle('open');
+    mobileDrawer.classList.toggle('open');
   });
 }
 
-// Smooth scroll for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
+/* ===========================
+   SMOOTH SCROLL
+   =========================== */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
     e.preventDefault();
-    const targetId = this.getAttribute('href');
-    
-    // Skip if it's just "#" (home link)
-    if (targetId === '#') {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-      return;
-    }
-    
-    const targetElement = document.querySelector(targetId);
-    if (targetElement) {
-      targetElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
+    closeMobileMenu();
   });
 });
 
-// Roblox API (Cloudflare Worker)
+/* ===========================
+   ROBLOX API
+   =========================== */
 const API = "https://skyline-roblox-api.bschofield987.workers.dev";
+let totalPlaying = 0, totalVisits = 0;
 
-let totalPlaying = 0;
-let totalVisits = 0;
-
-// List of verified creators (add creator names here)
 const verifiedCreators = [
   "Secret Base Community",
   "Prismplay Experiment",
   "Crazy Real Games",
-  // Add more verified creator names here
 ];
 
-// Format numbers with K, M, B abbreviations
-function formatNumber(num) {
-  if (num >= 1000000000) {
-    return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
-  }
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  }
-  if (num >= 1000) {
-    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-  }
-  return num.toString();
+function fmt(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+  return String(n);
 }
 
-// Truncate text to specified length
-function truncateText(text, maxLength) {
-  if (!text) return "No description available";
-  if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength) + '...';
+function truncate(text, max) {
+  if (!text) return "No description available.";
+  return text.length <= max ? text : text.slice(0, max) + '…';
 }
 
 async function loadGames() {
   totalPlaying = 0;
   totalVisits = 0;
-
-  const cards = document.querySelectorAll(".game-card");
+  const cards = document.querySelectorAll('.game-card');
 
   for (const card of cards) {
     const id = card.dataset.universeId;
-    
     try {
       const res = await fetch(`${API}?universeId=${id}`);
       const data = await res.json();
 
-      console.log(`Game ${id} FULL data:`, data); // Debug log
+      const thumb = card.querySelector('.game-thumb');
+      if (thumb && data.thumbnail) thumb.src = data.thumbnail;
 
-      // Update thumbnail
-      const thumb = card.querySelector(".game-thumb");
-      if (thumb && data.thumbnail) {
-        thumb.src = data.thumbnail;
-      }
+      const nameEl = card.querySelector('.game-name');
+      if (nameEl && data.name) nameEl.textContent = data.name;
 
-      // Update game name
-      const nameEl = card.querySelector(".game-name");
-      if (nameEl && data.name) {
-        nameEl.textContent = data.name;
-      }
+      const descEl = card.querySelector('.game-desc');
+      if (descEl) descEl.textContent = truncate(data.description, 100);
 
-      // Update description with 100 character limit
-      const descEl = card.querySelector(".game-desc");
-      if (descEl) {
-        descEl.textContent = truncateText(data.description, 100);
+      const authorEl = card.querySelector('.author-name');
+      const badge = card.querySelector('.verified-badge');
+      if (authorEl && data.creator) authorEl.textContent = data.creator;
+      if (badge && data.creator) {
+        const verified = data.isVerified || data.hasVerifiedBadge || data.verified || verifiedCreators.includes(data.creator);
+        badge.style.display = verified ? 'inline-block' : 'none';
       }
 
-      // Update developer/creator name and verified badge
-      const authorNameEl = card.querySelector(".author-name");
-      const verifiedBadge = card.querySelector(".verified-badge");
-      
-      if (authorNameEl && data.creator) {
-        authorNameEl.textContent = data.creator;
-      }
-      
-      // Show/hide verified badge based on verification status
-      if (verifiedBadge && data.creator) {
-        // Check if creator is in the verified list OR if API says verified
-        const isVerifiedByAPI = data.isVerified === true || data.hasVerifiedBadge === true || data.verified === true;
-        const isVerifiedInList = verifiedCreators.includes(data.creator);
-        const isVerified = isVerifiedByAPI || isVerifiedInList;
-        
-        console.log(`Game ${id} - Creator: ${data.creator}, Verified:`, isVerified); // Debug log
-        
-        if (isVerified) {
-          verifiedBadge.style.display = "inline-block";
-        } else {
-          verifiedBadge.style.display = "none";
-        }
-      }
+      const ccuEl = card.querySelector('.ccu');
+      const visitsEl = card.querySelector('.visits');
+      const ccu = data.playing ?? data.ccu ?? data.playerCount ?? 0;
+      const vis = data.visits ?? data.totalVisits ?? data.placeVisits ?? 0;
 
-      // Update stats in overlay with formatted numbers
-      const ccuEl = card.querySelector(".ccu");
-      const visitsEl = card.querySelector(".visits");
-      
-      // Try multiple possible field names for CCU
-      const ccuValue = data.playing ?? data.ccu ?? data.playerCount ?? data.activePlayers ?? 0;
-      const visitsValue = data.visits ?? data.totalVisits ?? data.placeVisits ?? 0;
-      
-      console.log(`Game ${id} - CCU value:`, ccuValue, 'Visits value:', visitsValue); // Debug log
-      console.log(`Game ${id} - Available fields:`, Object.keys(data)); // Show all available fields
-      
-      if (ccuEl) {
-        ccuEl.textContent = formatNumber(ccuValue);
-        if (typeof ccuValue === 'number') {
-          totalPlaying += ccuValue;
-        }
-      }
-      
-      if (visitsEl) {
-        visitsEl.textContent = formatNumber(visitsValue);
-        if (typeof visitsValue === 'number') {
-          totalVisits += visitsValue;
-        }
-      }
+      if (ccuEl) { ccuEl.textContent = fmt(ccu); totalPlaying += ccu; }
+      if (visitsEl) { visitsEl.textContent = fmt(vis); totalVisits += vis; }
 
-      // Update play button
-      const playBtn = card.querySelector(".play-btn");
+      const playBtn = card.querySelector('.play-btn');
       if (playBtn && data.placeId) {
-        playBtn.onclick = () => {
-          window.open(`https://www.roblox.com/games/${data.placeId}`, "_blank");
-        };
+        playBtn.onclick = () => window.open(`https://www.roblox.com/games/${data.placeId}`, '_blank');
       }
-    } catch (error) {
-      console.error(`Error loading game ${id}:`, error);
+    } catch (err) {
+      console.error(`Error loading game ${id}:`, err);
     }
   }
 
-  // Update total stats with formatted numbers
-  const totalPlayingEl = document.getElementById("total-playing");
-  const totalVisitsEl = document.getElementById("total-visits");
-  
-  console.log('Total Playing:', totalPlaying, 'Total Visits:', totalVisits); // Debug log
-  
-  if (totalPlayingEl) {
-    totalPlayingEl.textContent = formatNumber(totalPlaying);
-  }
-  
-  if (totalVisitsEl) {
-    totalVisitsEl.textContent = formatNumber(totalVisits);
-  }
+  const tp = document.getElementById('total-playing');
+  const tv = document.getElementById('total-visits');
+  if (tp) tp.textContent = fmt(totalPlaying);
+  if (tv) tv.textContent = fmt(totalVisits);
 }
 
-// Carousel functionality
-const cardsEl = document.querySelector(".cards");
-const gameCards = document.querySelectorAll(".game-card");
+loadGames();
 
-let currentIndex = 1; // Start with second card (index 1) in center
-let isDragging = false;
-let startX = 0;
-let currentTranslate = 0;
-let prevTranslate = 0;
+/* ===========================
+   CAROUSEL
+   =========================== */
+const cardsEl = document.querySelector('.cards');
+const gameCards = document.querySelectorAll('.game-card');
+const dots = document.querySelectorAll('.dot');
+let currentIdx = 1;
+let isDragging = false, startX = 0, prevTranslate = 0, currentTranslate = 0;
 
-// Initialize - set middle card as active
-function initCarousel() {
-  // Start with second card if there are at least 2 cards
-  if (gameCards.length > 1) {
-    currentIndex = 1;
-  } else {
-    currentIndex = 0;
-  }
+function getCardWidth() {
+  const card = gameCards[0];
+  if (!card) return 0;
+  return card.offsetWidth + 28; // gap
+}
+
+function setTranslate(x, animated = true) {
+  cardsEl.style.transition = animated ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none';
+  cardsEl.style.transform = `translateX(${x}px)`;
+}
+
+function updateCarousel(animated = true) {
+  const cw = getCardWidth();
+  const containerW = cardsEl.parentElement.offsetWidth;
+  const center = containerW / 2 - cw / 2;
+  const tx = center - currentIdx * cw;
+  prevTranslate = tx;
+  currentTranslate = tx;
+  setTranslate(tx, animated);
+
+  gameCards.forEach((c, i) => c.classList.toggle('active', i === currentIdx));
+  dots.forEach((d, i) => d.classList.toggle('active', i === currentIdx));
+}
+
+function goTo(idx) {
+  currentIdx = Math.max(0, Math.min(gameCards.length - 1, idx));
   updateCarousel();
-  updateActiveCard();
 }
 
-function updateCarousel() {
-  const cardWidth = 380 + 32; // card width + gap
-  const carousel = cardsEl.parentElement;
-  const containerWidth = carousel.offsetWidth;
-  
-  // Calculate offset to center the active card
-  const centerOffset = containerWidth / 2 - cardWidth / 2;
-  const translateX = centerOffset - (currentIndex * cardWidth);
-  
-  currentTranslate = translateX;
-  prevTranslate = translateX;
-  cardsEl.style.transform = `translateX(${translateX}px)`;
+dots.forEach(d => {
+  d.addEventListener('click', () => goTo(+d.dataset.idx));
+});
+
+// Drag
+function posX(e) {
+  return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
 }
 
-function updateActiveCard() {
-  gameCards.forEach((card, index) => {
-    if (index === currentIndex) {
-      card.classList.add('active');
-    } else {
-      card.classList.remove('active');
-    }
-  });
-}
-
-// Touch/Mouse drag functionality
-function getPositionX(event) {
-  return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
-}
-
-function dragStart(event) {
-  // Don't start drag if clicking on an image
-  if (event.target.tagName === 'IMG') {
-    return;
-  }
-  
+cardsEl.addEventListener('mousedown', e => {
+  if (e.target.tagName === 'IMG') return;
   isDragging = true;
-  startX = getPositionX(event);
-  cardsEl.style.cursor = 'grabbing';
+  startX = posX(e);
   cardsEl.style.transition = 'none';
-}
+});
 
-function drag(event) {
+cardsEl.addEventListener('touchstart', e => {
+  isDragging = true;
+  startX = posX(e);
+  cardsEl.style.transition = 'none';
+}, { passive: true });
+
+function onMove(e) {
   if (!isDragging) return;
-  
-  event.preventDefault(); // Prevent image dragging
-  
-  const currentX = getPositionX(event);
-  const diff = currentX - startX;
+  if (e.cancelable) e.preventDefault();
+  const diff = posX(e) - startX;
   currentTranslate = prevTranslate + diff;
-  
-  cardsEl.style.transform = `translateX(${currentTranslate}px)`;
+  setTranslate(currentTranslate, false);
 }
 
-function dragEnd() {
+cardsEl.addEventListener('mousemove', onMove);
+cardsEl.addEventListener('touchmove', onMove, { passive: false });
+
+function onEnd() {
   if (!isDragging) return;
-  
   isDragging = false;
-  cardsEl.style.cursor = 'grab';
-  cardsEl.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-  
-  const movedBy = currentTranslate - prevTranslate;
-  const cardWidth = 380 + 32;
-  
-  // Determine if we should move to next/prev card
-  if (movedBy < -100 && currentIndex < gameCards.length - 1) {
-    currentIndex++;
-  } else if (movedBy > 100 && currentIndex > 0) {
-    currentIndex--;
-  }
-  
+  const moved = currentTranslate - prevTranslate;
+  if (moved < -80 && currentIdx < gameCards.length - 1) currentIdx++;
+  else if (moved > 80 && currentIdx > 0) currentIdx--;
   updateCarousel();
-  updateActiveCard();
 }
 
-// Add event listeners for dragging
-if (cardsEl) {
-  // Mouse events
-  cardsEl.addEventListener('mousedown', dragStart);
-  cardsEl.addEventListener('mousemove', drag);
-  cardsEl.addEventListener('mouseup', dragEnd);
-  cardsEl.addEventListener('mouseleave', dragEnd);
-  
-  // Touch events
-  cardsEl.addEventListener('touchstart', dragStart);
-  cardsEl.addEventListener('touchmove', drag);
-  cardsEl.addEventListener('touchend', dragEnd);
-  
-  // Prevent context menu on long press
-  cardsEl.addEventListener('contextmenu', (e) => e.preventDefault());
-}
+cardsEl.addEventListener('mouseup', onEnd);
+cardsEl.addEventListener('mouseleave', onEnd);
+cardsEl.addEventListener('touchend', onEnd);
+cardsEl.addEventListener('contextmenu', e => e.preventDefault());
 
-// Update on window resize
+// Resize
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    updateCarousel();
-  }, 250);
+  resizeTimer = setTimeout(() => updateCarousel(false), 200);
 });
 
-// Initialize carousel
-initCarousel();
+updateCarousel(false);
 
-// Load games on page load ONLY
-loadGames();
-
-// Rain effect
-(function() {
+/* ===========================
+   RAIN EFFECT
+   =========================== */
+(function () {
   const btn = document.getElementById('rain-btn');
   const container = document.getElementById('rain-container');
   if (!btn || !container) return;
 
-  let raining = false;
-  let onCooldown = false;
-  const RAIN_DURATION = 2000;
-  const COOLDOWN = 3000;
-  const DROP_COUNT = 60;
-  const DROP_IMAGE = 'happymeal.png';
+  let raining = false, onCooldown = false;
+  const RAIN_DUR = 2000, COOLDOWN = 3000, COUNT = 60;
 
   function spawnDrop() {
     const drop = document.createElement('div');
     drop.className = 'rain-drop';
-    const x = Math.random() * 100;
-    const dur = 0.6 + Math.random() * 1.2;
-    const delay = Math.random() * 1.8;
-    drop.style.left = x + 'vw';
-    drop.style.animationDuration = dur + 's';
-    drop.style.animationDelay = delay + 's';
+    drop.style.left = Math.random() * 100 + 'vw';
+    drop.style.animationDuration = (0.6 + Math.random() * 1.2) + 's';
+    drop.style.animationDelay = (Math.random() * 1.8) + 's';
     drop.style.opacity = 0.7 + Math.random() * 0.3;
     const img = document.createElement('img');
-    img.src = DROP_IMAGE;
+    img.src = 'happymeal.png';
     img.draggable = false;
     drop.appendChild(img);
     container.appendChild(drop);
@@ -349,9 +345,7 @@ loadGames();
     if (raining || onCooldown) return;
     raining = true;
     btn.classList.add('active');
-
-    for (let i = 0; i < DROP_COUNT; i++) spawnDrop();
-
+    for (let i = 0; i < COUNT; i++) spawnDrop();
     setTimeout(() => {
       raining = false;
       onCooldown = true;
@@ -361,8 +355,6 @@ loadGames();
         onCooldown = false;
         btn.classList.remove('cooldown');
       }, COOLDOWN);
-    }, RAIN_DURATION);
+    }, RAIN_DUR);
   });
 })();
-
-// ADDED CUSTOM EASTTER EGG RAIN OKAY STOP LOOKING AT MY CODE!
