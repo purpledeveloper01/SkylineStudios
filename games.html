@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Games — Skyline Studios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="games-page">
+
+<canvas id="bg-canvas"></canvas>
+
+<header class="navbar" id="navbar">
+  <div class="nav-wrap">
+    <div class="nav-pill">
+      <div class="nav-pill-fx">
+        <div class="nav-pill-pulse"></div>
+        <div class="nav-pill-glow"></div>
+      </div>
+      <div class="nav-content">
+        <a href="/" class="nav-logo">
+          <div class="nav-logo-img-wrap">
+            <img src="logo.png" alt="Skyline Studios" class="nav-logo-img">
+          </div>
+          <div class="nav-logo-text">
+            <span class="nav-logo-name">Skyline Studios</span>
+            <span class="nav-logo-sub">DREAM · BUILD · PLAY</span>
+          </div>
+        </a>
+
+        <nav class="nav-desktop">
+          <div class="nav-link-group">
+            <a href="/games" class="nav-link">
+              <div class="nav-link-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/>
+                  <line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/>
+                </svg>
+              </div>
+              <span class="nav-link-label">GAMES</span>
+              <div class="nav-link-bar"></div>
+            </a>
+            <a href="/#about" class="nav-link">
+              <div class="nav-link-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <span class="nav-link-label">ABOUT</span>
+              <div class="nav-link-bar"></div>
+            </a>
+          </div>
+          <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="nav-social"><img src="DiscordIcon.png" alt="Discord"></a>
+          <a href="https://www.roblox.com/groups/9530841" target="_blank" class="nav-social"><img src="RobloxIcon.png" alt="Roblox"></a>
+        </nav>
+
+        <button class="nav-mobile-btn" id="mobileMenuBtn">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-mobile-drawer" id="mobileDrawer">
+      <a href="/games" class="mobile-link" onclick="closeMobile()">Games</a>
+      <a href="/#about" class="mobile-link" onclick="closeMobile()">About</a>
+      <div class="mobile-socials">
+        <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="mobile-social"><img src="DiscordIcon.png" alt="">Discord</a>
+        <a href="https://www.roblox.com/groups/9530841" target="_blank" class="mobile-social"><img src="RobloxIcon.png" alt="">Roblox</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="games-page-hero">
+  <h1 class="hero-h1">
+    Explore Our <span class="blue-text">Games.</span>
+  </h1>
+  <p class="hero-sub">Browse, play, and see what's live right now.</p>
+
+  <div class="stats-row">
+    <div class="stat-badge">
+      <img src="UserIcon.png" alt="" class="stat-icon">
+      <span class="stat-num" id="gp-total-playing">—</span>
+      <span class="stat-label">playing now</span>
+    </div>
+    <div class="stat-badge">
+      <img src="VisitIcon.png" alt="" class="stat-icon">
+      <span class="stat-num" id="gp-total-visits">—</span>
+      <span class="stat-label">total visits</span>
+    </div>
+  </div>
+</div>
+
+<div class="gp-toolbar">
+  <div class="gp-toolbar-left">
+    <button class="gp-filter-btn active" data-filter="all">All Games</button>
+    <button class="gp-filter-btn" data-filter="popular">Most Popular</button>
+    <button class="gp-filter-btn" data-filter="live">Live Now</button>
+  </div>
+  <div class="gp-toolbar-right">
+    <span class="gp-sort-label">Sort</span>
+    <select class="gp-sort-select" id="gp-sort">
+      <option value="default">Default</option>
+      <option value="visits">Most Visited</option>
+      <option value="playing">Most Playing</option>
+    </select>
+  </div>
+</div>
+
+<div class="gp-grid-wrap">
+  <div class="gp-grid" id="gpGrid"></div>
+  <p class="gp-note">*Some games were contributed to by Skyline Studios and are not studio-owned.</p>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <div class="footer-logo-row">
+          <img src="logo.png" alt="Skyline Studios" class="footer-logo-img">
+          <div>
+            <div class="footer-brand-name">Skyline Studios</div>
+            <div class="footer-brand-sub">DREAM · BUILD · PLAY</div>
+          </div>
+        </div>
+        <p class="footer-tagline">Creating immersive Roblox experiences built for you.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="/">Home</a>
+        <a href="/#about">About Us</a>
+        <a href="/games">Games</a>
+        <a href="https://www.roblox.com/groups/9530841" target="_blank">Roblox Group</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="https://discord.gg/FupwKNtQfN" target="_blank">
+          <img src="DiscordIcon.png" alt="" class="fc-icon"> Discord Server
+        </a>
+      </div>
+      <div class="footer-col">
+        <h4>Get in Touch</h4>
+        <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="footer-cta-btn">
+          <img src="DiscordIcon.png" alt=""> Join Our Server!
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Skyline Studios. All rights reserved.</p>
+      <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="footer-disc-link">
+        <img src="DiscordIcon.png" alt="Discord">
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
