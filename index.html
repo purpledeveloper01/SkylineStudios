@@ -9,6 +9,32 @@
 </head>
 <body>
 
+<div id="skyline-loader">
+
+  <div class="sl-logo-wrap">
+    <img src="logo.png" alt="" class="sl-logo">
+    <div class="sl-logo-shimmer"></div>
+  </div>
+
+  <div class="sl-tagline">
+    <span class="sl-word" style="animation-delay:.1s">Dream.</span>
+    <span class="sl-word" style="animation-delay:.4s">Build.</span>
+    <span class="sl-word" style="animation-delay:.7s">Play.</span>
+  </div>
+
+  <div class="sl-name-row">
+    <span class="sl-studio-name">Skyline Studios</span>
+  </div>
+
+  <div class="sl-bottom">
+    <div class="sl-bar-track">
+      <div class="sl-bar-fill" id="slBarFill"></div>
+    </div>
+    <p class="sl-status" id="slStatus">Initialising…</p>
+  </div>
+
+</div>
+
 <canvas id="bg-canvas"></canvas>
 
 <header class="navbar" id="navbar">
@@ -31,6 +57,18 @@
 
         <nav class="nav-desktop">
           <div class="nav-link-group">
+            <!-- HOME -->
+            <a href="#" class="nav-link">
+              <div class="nav-link-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/>
+                  <path d="M9 21V12h6v9"/>
+                </svg>
+              </div>
+              <span class="nav-link-label">HOME</span>
+              <div class="nav-link-bar"></div>
+            </a>
+            <!-- GAMES -->
             <a href="#games" class="nav-link">
               <div class="nav-link-icon">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -41,6 +79,7 @@
               <span class="nav-link-label">GAMES</span>
               <div class="nav-link-bar"></div>
             </a>
+            <!-- ABOUT -->
             <a href="#about" class="nav-link">
               <div class="nav-link-icon">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -48,6 +87,17 @@
                 </svg>
               </div>
               <span class="nav-link-label">ABOUT</span>
+              <div class="nav-link-bar"></div>
+            </a>
+            <!-- MORE SOON -->
+            <a href="#" class="nav-link nav-link-soon" style="pointer-events:none;opacity:.45;">
+              <div class="nav-link-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+              </div>
+              <span class="nav-link-label">MORE SOON<span style="font-size:.6em;vertical-align:super;margin-left:2px">…</span></span>
               <div class="nav-link-bar"></div>
             </a>
           </div>
@@ -62,8 +112,10 @@
     </div>
 
     <div class="nav-mobile-drawer" id="mobileDrawer">
+      <a href="#" class="mobile-link" onclick="closeMobile()">Home</a>
       <a href="#games" class="mobile-link" onclick="closeMobile()">Games</a>
       <a href="#about" class="mobile-link" onclick="closeMobile()">About</a>
+      <a class="mobile-link" style="opacity:.45;pointer-events:none;">More Soon…</a>
       <div class="mobile-socials">
         <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="mobile-social"><img src="DiscordIcon.png" alt="">Discord</a>
         <a href="https://www.roblox.com/groups/9530841" target="_blank" class="mobile-social"><img src="RobloxIcon.png" alt="">Roblox</a>
@@ -80,10 +132,16 @@
     <br>
     <span class="hero-line" style="animation-delay:.14s">Play.</span>
   </h1>
-  <a href="#games" class="hero-btn">
-    <span>EXPLORE NOW</span>
-    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg>
-  </a>
+  <a href="#games" class="animated-button hero-btn">
+  <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"/>
+  </svg>
+  <span class="text">EXPLORE NOW</span>
+  <span class="circle"></span>
+  <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"/>
+  </svg>
+</a>
 </section>
 
 <section class="games-section" id="games">
