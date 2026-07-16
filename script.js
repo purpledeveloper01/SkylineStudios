@@ -45,6 +45,28 @@
   else window.addEventListener('load', schedDismiss, { once: true });
 })();
 
+/* ==============================
+   SITE BANNER (dismissible, 1x per site load)
+   ============================== */
+(function () {
+  const KEY    = 'skyline_banner_dismissed';
+  const banner = document.getElementById('siteBanner');
+  const closeBtn = document.getElementById('siteBannerClose');
+  if (!banner) return;
+
+  // Already dismissed this session (site load) — hide instantly, no animation
+  if (sessionStorage.getItem(KEY)) {
+    banner.style.display = 'none';
+    return;
+  }
+
+  closeBtn?.addEventListener('click', () => {
+    banner.classList.add('site-banner-hidden');
+    sessionStorage.setItem(KEY, '1');
+    setTimeout(() => { banner.style.display = 'none'; }, 350);
+  });
+})();
+
 /* ==========================================================
    PARTICLES BACKGROUND
    ========================================================== */
@@ -369,7 +391,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
    ROBLOX API
    ========================================================== */
 const API          = 'https://skyline-roblox-api.bschofield987.workers.dev';
-const UNIVERSE_IDS = ['8581899016', '7201268162', '9626953705'];
+const UNIVERSE_IDS = ['8581899016', '7201268162', '9533030530'];
 const VERIFIED_CREATORS = ['Secret Base Community', 'Shopping Drift'];
 
 function fmt(n) {
@@ -400,6 +422,7 @@ async function loadIndexGames() {
   if (!cards.length) return;
 
   let totalPlaying = 0, totalVisits = 0;
+  const loadedGames = [];
 
   for (const card of cards) {
     try {
@@ -432,6 +455,14 @@ async function loadIndexGames() {
 
       const btn = card.querySelector('.card-play-btn');
       if (btn && d.placeId) btn.onclick = () => window.open(`https://www.roblox.com/games/${d.placeId}`, '_blank');
+
+      loadedGames.push({
+        name: d.name || 'Unknown Game',
+        description: d.description,
+        thumbnail: d.thumbnail,
+        placeId: d.placeId,
+        ccu, visits: vis,
+      });
     } catch (e) {
       const thumb = card.querySelector('.game-thumb');
       if (thumb) { thumb.src = 'placeholderimg.png'; thumb.classList.add('thumb-placeholder'); }
@@ -445,6 +476,67 @@ async function loadIndexGames() {
   if (tv) tv.textContent = fmt(totalVisits);
   const sc = document.getElementById('strip-avg-ccu');
   if (sc) sc.textContent = fmt(totalPlaying);
+
+  initFeaturedHero(loadedGames);
+}
+
+/* ── Featured hero (rotating top-3-by-visits showcase) ── */
+function initFeaturedHero(games) {
+  const wrap = document.getElementById('fhWrap');
+  if (!wrap || !games.length) return;
+
+  const top3 = [...games].sort((a, b) => b.visits - a.visits).slice(0, 3);
+
+  /* Two stacked background layers so we can crossfade between thumbnails */
+  const bgA = document.getElementById('fhBg');
+  const bgB = document.createElement('div');
+  bgB.className = 'fh-bg';
+  bgA.parentElement.insertBefore(bgB, bgA);
+  let currentBg = bgA, nextBg = bgB;
+
+  const nameEl  = document.getElementById('fhName');
+  const descEl  = document.getElementById('fhDesc');
+  const ccuEl   = document.getElementById('fhCcu');
+  const visEl   = document.getElementById('fhVisits');
+  const playBtn = document.getElementById('fhPlayBtn');
+  const dotsEl  = document.getElementById('fhDots');
+
+  top3.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'fh-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => { stop(); show(i); start(); });
+    dotsEl.appendChild(dot);
+  });
+
+  let idx = 0, timer = null;
+
+  function show(i) {
+    idx = i;
+    const g = top3[i];
+
+    nextBg.style.backgroundImage = `url('${g.thumbnail || 'placeholderimg.png'}')`;
+    nextBg.classList.add('fh-bg-active');
+    currentBg.classList.remove('fh-bg-active');
+    [currentBg, nextBg] = [nextBg, currentBg];
+
+    nameEl.textContent = g.name;
+    descEl.textContent = truncate(g.description, 140);
+    ccuEl.textContent  = fmt(g.ccu);
+    visEl.textContent  = fmt(g.visits);
+    playBtn.onclick = g.placeId
+      ? () => window.open(`https://www.roblox.com/games/${g.placeId}`, '_blank')
+      : null;
+
+    dotsEl.querySelectorAll('.fh-dot').forEach((d, di) => d.classList.toggle('active', di === i));
+  }
+
+  function start() {
+    timer = setInterval(() => show((idx + 1) % top3.length), 6000);
+  }
+  function stop() { clearInterval(timer); }
+
+  show(0);
+  start();
 }
 
 /* ── Carousel ── */
@@ -452,9 +544,11 @@ function initCarousel() {
   const cardsEl   = document.querySelector('.cards');
   const gameCards = document.querySelectorAll('.game-card');
   const cdots     = document.querySelectorAll('.cdot');
+  const prevBtn   = document.getElementById('carouselPrev');
+  const nextBtn   = document.getElementById('carouselNext');
   if (!cardsEl || !gameCards.length) return;
 
-  const GAP = 24, PAD = 40;
+  const GAP = 28, PAD = 40; // GAP updated to match new card spacing
   let idx = 1, dragging = false, startX = 0, prevTx = 0, curTx = 0;
 
   function cardW() { return gameCards[0]?.offsetWidth || 0; }
@@ -471,11 +565,17 @@ function initCarousel() {
     setPos(tx, animated);
     gameCards.forEach((c, i) => c.classList.toggle('active', i === idx));
     cdots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    if (prevBtn) prevBtn.disabled = idx === 0;
+    if (nextBtn) nextBtn.disabled = idx === gameCards.length - 1;
   }
 
   function goTo(i) { idx = Math.max(0, Math.min(gameCards.length - 1, i)); update(); }
 
   cdots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.idx)));
+  prevBtn?.addEventListener('click', () => goTo(idx - 1));
+  nextBtn?.addEventListener('click', () => goTo(idx + 1));
+
+  // ...rest of the function (drag handlers) stays exactly the same
 
   function posX(e) { return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; }
 
@@ -570,7 +670,7 @@ function initGamesPage() {
           <img src="VerifiedIcon.png" class="verified-badge" alt="✓" style="display:${isVerified(d) ? 'inline-block' : 'none'}">
         </p>
         <p class="game-desc">${truncate(d.description, 100)}</p>
-        <button class="card-play-btn"${d.placeId ? ` onclick="window.open('https://www.roblox.com/games/${d.placeId}','_blank')"` : ''}>
+        <button class="card-play-btn btn btn-primary btn-block"${d.placeId ? ` onclick="window.open('https://www.roblox.com/games/${d.placeId}','_blank')"` : ''}>
           Play Now <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg>
         </button>
       </div>`;
