@@ -2,348 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Skyline Studios</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>Skyline Studios is now SoggyToast</title>
+  <meta name="robots" content="noindex" />
+  <link rel="canonical" href="https://soggytoast.xyz/" />
+  <link rel="icon" href="https://soggytoast.xyz/assets/favicon.svg" type="image/svg+xml" />
+  <!-- Works even with JavaScript off -->
+  <meta http-equiv="refresh" content="4; url=https://soggytoast.xyz/" />
+  <style>
+    @font-face {
+      font-family: "Fredoka";
+      src: url("https://soggytoast.xyz/assets/fonts/Fredoka.ttf") format("truetype");
+      font-weight: 300 700;
+      font-display: swap;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: radial-gradient(ellipse at 50% 40%, #161616 0%, #000 70%);
+      color: #fff;
+      font-family: "Fredoka", system-ui, sans-serif;
+      text-align: center;
+      overflow: hidden;
+    }
+    .wrap { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+    .logo { width: 112px; height: 112px; margin: 0 auto 28px; animation: bob 3s ease-in-out infinite; }
+    h1 { margin: 0; font-size: clamp(32px, 6vw, 60px); font-weight: 700; line-height: 1.1; }
+    .accent { color: #5200ff; }
+    p { margin: 16px 0 0; font-size: 18px; color: #a3a3a3; }
+    .bar { width: 220px; height: 4px; margin: 32px auto 0; border-radius: 4px; background: #262626; overflow: hidden; }
+    .bar span { display: block; height: 100%; width: 0; background: #5200ff; animation: fill 4s linear forwards; }
+    a {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 13px 30px;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    a:hover { background: #fff; color: #000; }
+    @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+    @keyframes bob { 50% { transform: translateY(-8px); } }
+    @keyframes fill { to { width: 100%; } }
+    @media (prefers-reduced-motion: reduce) {
+      .wrap, .logo { animation: none; }
+      .bar span { animation: none; width: 100%; }
+    }
+  </style>
 </head>
 <body>
-
-<canvas id="bg-canvas"></canvas>
-
-<header class="navbar" id="navbar">
-  <div class="nav-wrap">
-    <a href="#" class="nav-logo">
-      <img src="logo.png" alt="Skyline Studios" class="nav-logo-img">
-      <span class="nav-logo-name">Skyline Studios</span>
-    </a>
-
-    <nav class="nav-desktop">
-      <a href="#" class="nav-link">Home</a>
-      <a href="#games" class="nav-link">Games</a>
-      <a href="#about" class="nav-link">About</a>
-      <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="nav-link">Discord</a>
-      <a href="https://www.roblox.com/groups/9530841" target="_blank" class="btn btn-primary btn-sm">Roblox Group</a>
-    </nav>
-
-    <button class="nav-mobile-btn" id="mobileMenuBtn">
-      <span></span><span></span><span></span>
-    </button>
-
-    <div class="nav-mobile-drawer" id="mobileDrawer">
-      <a href="#" class="mobile-link" onclick="closeMobile()">Home</a>
-      <a href="#games" class="mobile-link" onclick="closeMobile()">Games</a>
-      <a href="#about" class="mobile-link" onclick="closeMobile()">About</a>
-      <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="mobile-link" onclick="closeMobile()">Discord</a>
-      <a href="https://www.roblox.com/groups/9530841" target="_blank" class="mobile-link" onclick="closeMobile()">Roblox Group</a>
-    </div>
-  </div>
-</header>
-
-<div class="site-banner" id="siteBanner">
-  <div class="site-banner-inner">
-    <span class="site-banner-icon">👋</span>
-    <p class="site-banner-text">
-      <strong>Hey There!</strong> Check out the latest game - jump in now!
-    </p>
-    <a href="https://www.roblox.com/games/110444899435961/Whats-In-The-Box" target="_blank" class="site-banner-link">View</a>
-  </div>
-  <button class="site-banner-close" id="siteBannerClose" aria-label="Dismiss notification">
-    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-  </button>
-</div>
-
-<section class="hero">
-  <h2 class="hero-discover">Discover</h2>
-  <div class="fh-wrap" id="fhWrap">
-    <div class="fh-bg" id="fhBg"></div>
-    <div class="fh-bg-fade-top"></div>
-    <div class="fh-bg-fade-bottom"></div>
-
-    <div class="fh-content">
-      <div class="fh-eyebrow">Featured Game</div>
-      <h1 class="fh-name" id="fhName">Loading…</h1>
-      <p class="fh-desc" id="fhDesc">Fetching game data…</p>
-
-      <div class="fh-stats">
-        <div class="fh-stat"><img src="UserIcon.png" alt=""><span id="fhCcu">0</span> playing</div>
-        <div class="fh-stat"><img src="VisitIcon.png" alt=""><span id="fhVisits">0</span> visits</div>
-      </div>
-
-      <div class="fh-btn-row">
-        <button class="btn btn-primary" id="fhPlayBtn">
-          <span>PLAY NOW</span>
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </button>
-        <a href="#games" class="btn btn-secondary">
-          <span>Explore</span>
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>
-      </div>
-
-      <div class="fh-dots" id="fhDots"></div>
-    </div>
-  </div>
-</section>
-
-<section class="games-section" id="games">
-  <div class="section-inner">
-    <div class="section-head">
-      <h2 class="section-title">Our Top <span class="blue-text">Hits</span></h2>
-      <p class="section-sub">Explore our collection of immersive Roblox experiences</p>
-      <p class="section-note">*Some games were contributed to by Skyline Studios and are not studio-owned.</p>
-
-      <div class="stats-row">
-        <div class="stat-badge">
-          <img src="UserIcon.png" alt="" class="stat-icon">
-          <span class="stat-num" id="total-playing">0</span>
-          <span class="stat-label">playing now</span>
-          <div class="stat-live-dot"></div>
-        </div>
-        <div class="stat-badge">
-          <img src="VisitIcon.png" alt="" class="stat-icon">
-          <span class="stat-num" id="total-visits">0</span>
-          <span class="stat-label">total visits</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="cards-scroll-wrap">
-      <div class="cards" id="cardsEl">
-
-        <div class="game-card" data-universe-id="8581899016">
-          <div class="card-img-wrap">
-            <img class="game-thumb" src="" alt="Game">
-            <div class="card-img-fade"></div>
-            <div class="card-badges">
-              <div class="card-badge-pill"><img src="UserIcon.png" alt=""><span class="ccu">0</span></div>
-              <div class="card-badge-pill"><img src="VisitIcon.png" alt=""><span class="visits">0</span></div>
-            </div>
-          </div>
-          <div class="card-body">
-            <h3 class="game-name">Loading...</h3>
-            <p class="card-creator"><span class="by">by</span> <span class="author-name">Loading...</span><img src="VerifiedIcon.png" class="verified-badge" alt="✓"></p>
-            <p class="game-desc">Fetching game data...</p>
-            <button class="card-play-btn btn btn-primary btn-block">Play Now <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></button>
-          </div>
-        </div>
-
-        <div class="game-card" data-universe-id="7201268162">
-          <div class="card-img-wrap">
-            <img class="game-thumb" src="" alt="Game">
-            <div class="card-img-fade"></div>
-            <div class="card-badges">
-              <div class="card-badge-pill"><img src="UserIcon.png" alt=""><span class="ccu">0</span></div>
-              <div class="card-badge-pill"><img src="VisitIcon.png" alt=""><span class="visits">0</span></div>
-            </div>
-          </div>
-          <div class="card-body">
-            <h3 class="game-name">Loading...</h3>
-            <p class="card-creator"><span class="by">by</span> <span class="author-name">Loading...</span><img src="VerifiedIcon.png" class="verified-badge" alt="✓"></p>
-            <p class="game-desc">Fetching game data...</p>
-            <button class="card-play-btn btn btn-primary btn-block">Play Now <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></button>
-          </div>
-        </div>
-
-        <div class="game-card" data-universe-id="9533030530">
-          <div class="card-img-wrap">
-            <img class="game-thumb" src="" alt="Game">
-            <div class="card-img-fade"></div>
-            <div class="card-badges">
-              <div class="card-badge-pill"><img src="UserIcon.png" alt=""><span class="ccu">0</span></div>
-              <div class="card-badge-pill"><img src="VisitIcon.png" alt=""><span class="visits">0</span></div>
-            </div>
-          </div>
-          <div class="card-body">
-            <h3 class="game-name">Loading...</h3>
-            <p class="card-creator"><span class="by">by</span> <span class="author-name">Loading...</span><img src="VerifiedIcon.png" class="verified-badge" alt="✓"></p>
-            <p class="game-desc">Fetching game data...</p>
-            <button class="card-play-btn btn btn-primary btn-block">Play Now <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"/></svg></button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="carousel-nav">
-      <button class="carousel-arrow" id="carouselPrev" aria-label="Previous game">
-        <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-      <div class="carousel-dots" id="carouselDots">
-        <button class="cdot active" data-idx="0"></button>
-        <button class="cdot" data-idx="1"></button>
-        <button class="cdot" data-idx="2"></button>
-      </div>
-      <button class="carousel-arrow" id="carouselNext" aria-label="Next game">
-        <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </button>
-    </div>
-
-    <div class="explore-btn-wrap">
-      <a href="/games" class="explore-all-btn btn btn-secondary">
-        <span>Explore All Games</span>
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
-             stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </a>
-    </div>
-
-</section>
-
-<section class="about-section" id="about">
-  <div class="section-inner">
-    <div class="section-head">
-      <h2 class="section-title">About <span class="blue-text">Us</span></h2>
-    </div>
-
-    <div class="about-two-col">
-      <div class="tilt-card" id="tiltCard1">
-        <div class="tilt-card-bg-icon blue-icon">
-          <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-        </div>
-        <div class="tilt-card-icon-row">
-          <div class="tilt-icon-box" style="color:#3b82f6;border-color:rgba(59,130,246,.25);background:rgba(59,130,246,.1)">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h3>Our Mission</h3>
-        </div>
-        <p><strong>Skyline Studios</strong> is committed to crafting immersive, engaging Roblox experiences that delight millions across the globe. Our mission is to expand the limits of what's possible on the platform - <span style="color:#93c5fd;font-weight:600">always prioritizing quality above everything else.</span></p>
-        <div class="tilt-shine"></div>
-      </div>
-
-      <div class="tilt-card" id="tiltCard2">
-        <div class="tilt-card-bg-icon violet-icon">
-          <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        </div>
-        <div class="tilt-card-icon-row">
-          <div class="tilt-icon-box" style="color:#8b5cf6;border-color:rgba(139,92,246,.25);background:rgba(139,92,246,.1)">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-          </div>
-          <h3>Our Vision</h3>
-        </div>
-        <p>At Skyline Studios, players enter games inspired by dreams and sustained by something greater. We believe in <span style="color:#c4b5fd;font-weight:600">richer stories, deeper worlds, and unforgettable moments</span> - shared by a community that always returns.</p>
-        <div class="tilt-shine"></div>
-      </div>
-    </div>
-
-    <div class="stats-strip">
-      <div class="strip-item"><div class="strip-num">42M+</div><div class="strip-label">Total Visits</div><div class="strip-note">*approx.</div></div>
-      <div class="strip-divider"></div>
-      <div class="strip-item"><div class="strip-num">5+</div><div class="strip-label">Games Published</div></div>
-      <div class="strip-divider"></div>
-      <div class="strip-item"><div class="strip-num" id="strip-avg-ccu">700</div><div class="strip-label">Active Players</div><div class="strip-note">*avg. CCU</div></div>
-      <div class="strip-divider"></div>
-      <div class="strip-item"><div class="strip-num">2021</div><div class="strip-label">Established</div><div class="strip-note">*originally build4fun</div></div>
-    </div>
-
-    <div class="feature-grid">
-      <div class="feature-card">
-        <div class="tilt-card-bg-icon blue-icon">
-          <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-        <div class="feature-emoji">🎯</div>
-        <h4>Quality First</h4>
-        <p>Every project crafted with meticulous attention to detail, meeting the highest standards of quality and player satisfaction.</p>
-        <div class="tilt-shine"></div>
-      </div>
-      <div class="feature-card">
-        <div class="tilt-card-bg-icon violet-icon">
-          <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-        <div class="feature-emoji">💬</div>
-        <h4>Community Driven</h4>
-        <p>Player feedback shapes our development. We listen, adapt, and create experiences that truly resonate.</p>
-        <div class="tilt-shine"></div>
-      </div>
-      <div class="feature-card">
-        <div class="tilt-card-bg-icon blue-icon">
-          <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-        <div class="feature-emoji">🚀</div>
-        <h4>Innovation</h4>
-        <p>Constantly exploring new mechanics to deliver fresh, exciting experiences that keep players coming back.</p>
-        <div class="tilt-shine"></div>
-      </div>
-      <div class="feature-card">
-        <div class="tilt-card-bg-icon violet-icon">
-          <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-        <div class="feature-emoji">👥</div>
-        <h4>Our Team</h4>
-        <p>A passionate crew of developers, designers, and creators united by a commitment to excellence.</p>
-        <div class="tilt-shine"></div>
-      </div>
-      <div class="feature-card">
-        <div class="tilt-card-bg-icon blue-icon">
-          <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-        <div class="feature-emoji">⭐</div>
-        <h4>Track Record</h4>
-        <p>Over 42M visits and growing — we build games that players keep coming back to.</p>
-        <div class="tilt-shine"></div>
-      </div>
-      <div class="feature-card">
-        <div class="tilt-card-bg-icon violet-icon">
-          <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-        <div class="feature-emoji">💎</div>
-        <h4>Our Values</h4>
-        <p>Integrity, creativity, and player satisfaction sit at the core of everything we do.</p>
-        <div class="tilt-shine"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand-col">
-        <div class="footer-logo-row">
-          <img src="logo.png" alt="Skyline Studios" class="footer-logo-img">
-          <div>
-            <div class="footer-brand-name">Skyline Studios</div>
-            <div class="footer-brand-sub">DREAM · BUILD · PLAY</div>
-          </div>
-        </div>
-        <p class="footer-tagline">Creating immersive Roblox experiences built for you.</p>
-      </div>
-
-      <div class="footer-col">
-        <h4>Company</h4>
-        <a href="#">Home</a>
-        <a href="#about">About Us</a>
-        <a href="#games">Games</a>
-        <a href="https://www.roblox.com/groups/9530841" target="_blank">Roblox Group</a>
-      </div>
-
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <a href="https://discord.gg/FupwKNtQfN" target="_blank"><img src="DiscordIcon.png" alt="" class="fc-icon"> Discord Server</a>
-      </div>
-
-      <div class="footer-col">
-        <h4>Get in Touch</h4>
-        <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="footer-cta-btn btn btn-secondary btn-sm">
-          <img src="DiscordIcon.png" alt=""> Join Our Server!
-        </a>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p>© 2025 Skyline Studios. All rights reserved.</p>
-      <a href="https://discord.gg/FupwKNtQfN" target="_blank" class="footer-disc-link">
-        <img src="DiscordIcon.png" alt="Discord">
-      </a>
-    </div>
-  </div>
-</footer>
-
-<script src="script.js"></script>
+  <main class="wrap">
+    <img class="logo" src="https://soggytoast.xyz/assets/logo.svg" alt="SoggyToast logo" />
+    <h1>Skyline Studios is now <span class="accent">SoggyToast</span></h1>
+    <p>Same team, new name. Taking you there now…</p>
+    <div class="bar" aria-hidden="true"><span></span></div>
+    <a href="https://soggytoast.xyz/">Go now</a>
+  </main>
+  <script>
+    setTimeout(() => location.replace("https://soggytoast.xyz/"), 4000);
+  </script>
 </body>
 </html>
